@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Department {
+  ENGINEERING
+  PRODUCT
+  DESIGN
+  MARKETING
+  SALES
+  HR
+  FINANCE
+  OPERATIONS
+  LEGAL
+}
+
+enum EmployeeStatus {
+  ACTIVE
+  ON_LEAVE
+  ONBOARDING
+  INACTIVE
+}
+
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+}
+
+model Employee {
+  id                           String         @id @default(uuid())
+  employeeId                   String         @unique
+  firstName                    String
+  lastName                     String
+  email                        String         @unique
+  phone                        String
+  jobTitle                     String
+  department                   Department
+  status                       EmployeeStatus @default(ONBOARDING)
+  employmentType               EmploymentType @default(FULL_TIME)
+  hireDate                     DateTime
+  dateOfBirth                  DateTime
+  terminationDate              DateTime?
+  location                     String
+  avatarColor                  String         @default("#6366f1")
+  isTopLevel                   Boolean        @default(false)
+  emergencyContactName         String?
+  emergencyContactRelationship String?
+  emergencyContactPhone        String?
+
+  managerId     String?
+  manager       Employee?  @relation("EmployeeToManager", fields: [managerId], references: [id])
+  directReports Employee[] @relation("EmployeeToManager")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
