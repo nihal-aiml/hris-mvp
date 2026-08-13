@@ -1,6 +1,6 @@
 import { Employee, EmployeeFormData } from '../types/employee';
 
-const BASE_URL = 'http://localhost:3001/api';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
